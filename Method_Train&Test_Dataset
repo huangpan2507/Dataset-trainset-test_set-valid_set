@@ -11,7 +11,10 @@ shuffle_rnb.shuffle(shuffle_idx)
 print('shuffle_rnb_shuffle:', shuffle_rnb.shuffle(shuffle_idx))  # None
 print('shuffle_idx_after:', shuffle_idx)
 
-X, y = X[shuffle_idx], y[shuffle_idx]
+X, y = X[shuffle_idx], y[shuffle_idx]   # 打乱顺序
+
+# X_train, X_test = X[:70],  X[70:] 与下面区别是加了shuffle_idx又会再次将X打乱
+
 X_train, X_test = X[shuffle_idx[:70]],  X[shuffle_idx[70:]]
 y_train, y_test = y[shuffle_idx[:70]], y[shuffle_idx[70:]]
 
