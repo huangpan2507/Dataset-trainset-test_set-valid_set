@@ -2,10 +2,14 @@
 
 # Shuffling & train/test split
 shuffle_idx = np.arange(y.shape[0])        # 索引范围 0-总行数
+print('shuffle_idx_before:', shuffle_idx)
 shuffle_rnb = np.random.RandomState(123)   # 为随机数产生器的种子，里面的数字相同，则产生的随机数相同
-print(shuffle_rnb)   # <mtrand.RandomState object at 0x000000000B352EA0>
+# print(shuffle_rnb)   # <mtrand.RandomState object at 0x000000000B352EA0>
+
 shuffle_rnb.shuffle(shuffle_idx)
-# print('shuffle_rnb_shuffle:', shuffle_rnb.shuffle(shuffle_idx))  # None
+# np.random.shuffle(shuffle_idx) 与上面的区别就是这个每次运行会得到不同结果， 上面随机种子.shuffle()结果一样
+print('shuffle_rnb_shuffle:', shuffle_rnb.shuffle(shuffle_idx))  # None
+print('shuffle_idx_after:', shuffle_idx)
 
 X, y = X[shuffle_idx], y[shuffle_idx]
 X_train, X_test = X[shuffle_idx[:70]],  X[shuffle_idx[70:]]
