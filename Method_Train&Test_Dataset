@@ -1,0 +1,46 @@
+1.
+
+# Shuffling & train/test split
+shuffle_idx = np.arange(y.shape[0])        # 索引范围 0-总行数
+shuffle_rnb = np.random.RandomState(123)   # 为随机数产生器的种子，里面的数字相同，则产生的随机数相同
+print(shuffle_rnb)   # <mtrand.RandomState object at 0x000000000B352EA0>
+shuffle_rnb.shuffle(shuffle_idx)
+# print('shuffle_rnb_shuffle:', shuffle_rnb.shuffle(shuffle_idx))  # None
+
+X, y = X[shuffle_idx], y[shuffle_idx]
+X_train, X_test = X[shuffle_idx[:70]],  X[shuffle_idx[70:]]
+y_train, y_test = y[shuffle_idx[:70]], y[shuffle_idx[70:]]
+
+2.
+def create_datasets(batch_size):
+
+   valid_size = 0.2
+
+# convert data to torch.FloatTensor
+    transform = transforms.ToTensor()
+
+# choose the training and test dataset
+    train_data = datasets.MNIST(root='data', train=True, download=True, transform=transform)
+    test_data = datasets.MNIST(root='data', train=False, download=True, transform=transform)
+
+    num_train = len(train_data)              # 60000
+    indices = list(range(num_train))
+# print('indices:', indices, type(indices))
+    np.random.shuffle(indices)
+# np.floor向下取整
+    split = int(np.floor(valid_size * num_train))
+    train_idx, valid_idx = indices[split:], indices[:split]
+
+    # define samples for obtaining training and validation batches
+    # 子集随机采样器，与shuffle互斥
+    train_sampler = SubsetRandomSampler(train_idx)
+    valid_sampler = SubsetRandomSampler(valid_idx)
+
+    # load training data in batches
+    train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, sampler=train_sampler, num_workers=0)
+
+    # load validation data in batches
+    valid_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, sampler=valid_sampler, num_workers=0)
+
+    test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size, num_workers=0)
+    return train_loader, test_loader, valid_loader
